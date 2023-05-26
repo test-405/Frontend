@@ -1,21 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-// import './index.css';
 import App from './App';
+import LoginPage from './js/LoginPage';
 import reportWebVitals from './reportWebVitals';
-
 import { ThemeProvider } from "@material-tailwind/react";
+import Cookies from 'js-cookie';
+
+function RootComponent() {
+  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn') === 'true');
+
+  // 重新检查登录状态
+  const handleCheckLogin = () => {
+    setIsLoggedIn(Cookies.get('isLoggedIn') === 'true');
+  };
+
+  useEffect(() => {
+    handleCheckLogin();
+  }, []);
+
+  if (isLoggedIn) {
+    return <App />;
+  } else {
+    return <LoginPage onLogin={handleCheckLogin} />;
+  }
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <App />
+      <RootComponent />
     </ThemeProvider>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
