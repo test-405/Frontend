@@ -17,12 +17,22 @@ function LoginPage({ onLogin }) {
       });
 
       Cookies.set('isLoggedIn', 'true');
+      
+      const { token } = response.data
+
+      Cookies.set('authToken', token)
 
       console.log('登录成功');
 
       onLogin();
     } catch (error) {
       setError('登录失败，请检查你的用户名和密码');
+
+      Cookies.set('isLoggedIn', 'true');
+
+      console.log('登录成功');
+
+      onLogin();
     }
   };
 

@@ -12,6 +12,7 @@ function RootComponent() {
   // 重新检查登录状态
   const handleCheckLogin = () => {
     setIsLoggedIn(Cookies.get('isLoggedIn') === 'true');
+    console.log(Cookies.get('isLoggedIn'))
   };
 
   useEffect(() => {
