@@ -13,9 +13,7 @@ import './index.css'
 export default function App() {
   const [tabs, setTabs] = useState([
     { value: '主页', icon: HomeIcon, id: useId() },
-    { value: 'document', icon: DocumentIcon, id: useId() },
-    { value: 'time', icon: DocumentIcon, id: useId() },
-    { value: 'abcd', icon: DocumentIcon, id: useId() },
+    { value: 'test', icon: DocumentIcon, id: useId() },
   ]);
   const addTab = (newTab) => {
     setTabs(oldTabs => [...oldTabs, newTab]);

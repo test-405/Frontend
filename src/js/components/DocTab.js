@@ -4,6 +4,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { PDF_REQ_URL } from '../config';
 
 
 export function DocTab(value) {
@@ -16,7 +17,7 @@ export function DocTab(value) {
   );
 }
 
-export function PDFViewer() {
+export function PDFViewer({ fileName }) {
   const [fileUrl, setFileUrl] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -31,13 +32,16 @@ export function PDFViewer() {
     try {
       const token = Cookies.get('authToken');
       // TODO: change pdf path
-      const response = await axios.get('/path/to/pdf/file', {
+      const response = await axios.get(PDF_REQ_URL, {
         responseType: 'blob',
         withCredentials: true, // 发送请求时带上cookie
         // 可选：如果需要传递其他请求头或参数，请在这里添加
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          fileName: fileName,
+        }
       });
 
       if (response.status === 200) {
