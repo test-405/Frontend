@@ -29,18 +29,13 @@ export function SideBar() {
   }, [width]);
 
   return (
-    <Card ref={ref} className="static top-0 left-0 h-screen w-1/5 xs-4 p-4 shadow-xl shadow-blue-gray-900/5">
-      <div className="mb-2 p-4">
-        <Typography variant="h5" color="blue-gray">
-          Sidebar
-        </Typography>
-      </div>
+    <Card ref={ref} className="static top-0 left-0 h-screen w-1/6 xs-4 p-4 shadow-xl shadow-blue-gray-900/5">
       <List>
         <ListItem>
           <ListItemPrefix>
             <HomeIcon className="h-5 w-5" />
           </ListItemPrefix>
-          {showText && 'Dashboard'}
+          {showText && '主页'}
         </ListItem>
       </List>
     </Card>

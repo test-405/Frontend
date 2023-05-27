@@ -62,7 +62,7 @@ export function NavTabs() {
               value === '主页' ? (
                 <SideBar />
               ) : (<div>
-                <PDFViewer/>
+                <PDFViewer fileName={ value }/>
               </div>)
             }
           </TabPanel>
