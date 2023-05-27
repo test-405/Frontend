@@ -7,8 +7,9 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import {
-  // HomeIcon,
-  // DocumentIcon,
+  HomeIcon,
+  // XMarkIcon,
+  DocumentIcon,
 } from "@heroicons/react/24/outline";
 import { SideBar } from "./SideBar"
 import TabsContext from "../TabsContext";
@@ -20,7 +21,16 @@ import {
 import { PDFViewer } from './DocTab'
 
 export function NavTabs() {
-  const { tabs, setTabs } = React.useContext(TabsContext);
+  const [tabs, setTabs] = useState([
+    { value: '导航页', icon: HomeIcon, id: useId() },
+    { value: 'test', icon: DocumentIcon, id: useId() },
+  ]);
+
+  const addTab = (newTab) => {
+    setTabs(oldTabs => [...oldTabs, newTab]);
+  }
+
+  // const { tabs, setTabs } = React.useContext(TabsContext);
   // tabs.push({ value: 'cha', icon: XMarkIcon, id: useId(),})
   const [activeTab, setActiveTab] = useState('主页');
 
@@ -34,40 +44,44 @@ export function NavTabs() {
   };
 
   return (
-    <Tabs value={activeTab}>
-      <TabsHeader>
-        <div className="grid grid-cols-8 gap-2 w-full md:w-1/8">
-          {tabs.map(({ value, icon, id }) => (
-            <Tab key={id} value={value} className="w-full md:w-1/8 relative">
-              <div className="flex justify-start h-full items-center">
-                <div className="flex items-center mr-auto">
-                  {React.createElement(icon, { className: "h-5 w-5 mr-2" })}
-                  {value}
-                </div>
-                {value !== '主页' && (<button
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-1 hover:shadow-md"
-                  onClick={() => handleCloseTab(id)}
-                >
-                  <XMarkIcon className="h-5 w-5" />
-                </button>)}
-              </div>
-            </Tab>
-          ))}
-        </div>
-      </TabsHeader>
-      <TabsBody>
-        {tabs.map(({ value, id }) => (
-          <TabPanel key={id} value={value}>
-            {
-              value === '主页' ? (
-                <SideBar />
-              ) : (<div>
-                <PDFViewer fileName={ value }/>
-              </div>)
-            }
-          </TabPanel>
-        ))}
-      </TabsBody>
-    </Tabs>
+    <div>
+      <TabsContext.Provider value={{ tabs, setTabs, addTab }}>
+        <Tabs value={activeTab}>
+          <TabsHeader>
+            <div className="grid grid-cols-8 gap-2 w-full md:w-1/8">
+              {tabs.map(({ value, icon, id }) => (
+                <Tab key={id} value={value} className="w-full md:w-1/8 relative">
+                  <div className="flex justify-start h-full items-center">
+                    <div className="flex items-center mr-auto">
+                      {React.createElement(icon, { className: "h-5 w-5 mr-2" })}
+                      <p className="line-clamp-1 lg:line-clamp-none">{value}</p>
+                    </div>
+                    {value !== '导航页' && (<button
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-1 hover:shadow-md"
+                      onClick={() => handleCloseTab(id)}
+                    >
+                      <XMarkIcon className="h-5 w-5" />
+                    </button>)}
+                  </div>
+                </Tab>
+              ))}
+            </div>
+          </TabsHeader>
+          <TabsBody>
+            {tabs.map(({ value, id }) => (
+              <TabPanel key={id} value={value}>
+                {
+                  value === '导航页' ? (
+                    <></>
+                  ) : (<div>
+                    <PDFViewer fileName={value} />
+                  </div>)
+                }
+              </TabPanel>
+            ))}
+          </TabsBody>
+        </Tabs>
+      </TabsContext.Provider>
+    </div>
   );
 }
