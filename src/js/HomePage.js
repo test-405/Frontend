@@ -1,8 +1,3 @@
-// import { Button } from "@material-tailwind/react";
-import { NavTabs } from "./components/NavTabs"
-import { DocTab } from "./components/DocTab"
-import { SideBar } from "./components/SideBar";
-import TabsContext from "./TabsContext"
 import React, { useState, useId } from "react";
 
 
