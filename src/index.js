@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import LoginPage from './js/LoginPage';
-import LibraryPage from './js/LibraryPage'; // 新增的文献库管理页面
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from "@material-tailwind/react";
 import Cookies from 'js-cookie';
-import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
+import { BrowserRouter as Router, useRoutes, useNavigate } from 'react-router-dom';
 
 function RootComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn') === 'true');
+  const navigate = useNavigate();
 
   // 重新检查登录状态
   const handleCheckLogin = () => {
@@ -19,10 +19,13 @@ function RootComponent() {
 
   useEffect(() => {
     handleCheckLogin();
-  }, []);
-
+    if (isLoggedIn && window.location.pathname === '/login') {
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate]);
+  
   const routing = useRoutes([
-    { path: 'login', element: isLoggedIn ? <App /> : <LoginPage onLogin={handleCheckLogin} /> },
+    { path: 'login', element: <LoginPage onLogin={handleCheckLogin} /> },
     { path: '/', element: isLoggedIn ? <App /> : <LoginPage onLogin={handleCheckLogin} /> },
   ]);
 
