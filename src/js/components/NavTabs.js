@@ -1,4 +1,4 @@
-import React, { useState, useId, useEffect } from "react";
+import React, { useState, useId } from "react";
 import {
   Tabs,
   TabsHeader,
@@ -11,7 +11,6 @@ import {
   // XMarkIcon,
   DocumentIcon,
 } from "@heroicons/react/24/outline";
-import { SideBar } from "./SideBar"
 import TabsContext from "../TabsContext";
 
 import {
@@ -20,7 +19,7 @@ import {
 
 import { PDFViewer } from './DocTab'
 
-export function NavTabs() {
+export function NavTabs({ activeTab, setActiveTab}) {
   const [tabs, setTabs] = useState([
     { value: '导航页', icon: HomeIcon, id: useId() },
     { value: 'test', icon: DocumentIcon, id: useId() },
@@ -32,7 +31,9 @@ export function NavTabs() {
 
   // const { tabs, setTabs } = React.useContext(TabsContext);
   // tabs.push({ value: 'cha', icon: XMarkIcon, id: useId(),})
-  const [activeTab, setActiveTab] = useState('主页');
+  // const [activeTab, setActiveTab] = useState('主页');
+
+  const [selectedTab, setSelectedTab] = useState(tabs[0]?.value);
 
   const handleCloseTab = (id) => {
     const index = tabs.findIndex(tab => tab.id === id);
@@ -43,6 +44,12 @@ export function NavTabs() {
     setActiveTab(prevTab);
   };
 
+  const handleTabChange = (tabName) => {
+    console.log('tab changed:',tabName);
+    setSelectedTab(tabName);
+    setActiveTab(tabName);
+  };
+
   return (
     <div>
       <TabsContext.Provider value={{ tabs, setTabs, addTab }}>
@@ -50,7 +57,7 @@ export function NavTabs() {
           <TabsHeader>
             <div className="grid grid-cols-8 gap-2 w-full md:w-1/8">
               {tabs.map(({ value, icon, id }) => (
-                <Tab key={id} value={value} className="w-full md:w-1/8 relative">
+                <Tab key={id} value={value} className="w-full md:w-1/8 relative" onClick={() => handleTabChange(value)}>
                   <div className="flex justify-start h-full items-center">
                     <div className="flex items-center mr-auto">
                       {React.createElement(icon, { className: "h-5 w-5 mr-2" })}
