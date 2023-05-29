@@ -3,28 +3,24 @@ import {
     Card,
     CardHeader,
     CardBody,
-    Input,
     Button,
     Typography,
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
 } from "@material-tailwind/react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { LOGIN_URL, REGISTER_URL } from './config';
 import FailAlert from "./components/FailAlert";
+import { TextField } from "@mui/material";
+
 
 export default function LoginPage({ onLogin }) {
-    const [activeTab, setActiveTab] = useState("login");
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
+    const [isSignin, setIsSignin] = useState(true);
     // const [error, setError] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMsg, setAlertMsg] = useState('');
@@ -46,6 +42,7 @@ export default function LoginPage({ onLogin }) {
 
             onLogin();
         } catch (error) {
+            console.log("登录失败");
             // setError('登录失败，请检查你的用户名和密码');
             setShowAlert(true);
             setAlertMsg('登录失败，请检查你的用户名和密码')
@@ -86,109 +83,95 @@ export default function LoginPage({ onLogin }) {
 
     return (
         <div className="flex items-center justify-center h-screen">
-        <Card className="w-1/5 max-w-[24rem]">
-            <CardHeader
-                color="blue"
-                floated={false}
-                shadow={false}
-                className="m-0 grid place-items-center rounded-b-none py-8 px-4 text-center"
-            >
-                {/* <div className="mb-4 rounded-full border border-white/10 bg-white/10 p-6 text-white">
-          <BanknotesIcon className="h-10 w-10" />
-        </div> */}
-                <Typography variant="h4" color="white">
+            <Card className="w-96">
+                <CardHeader
+                    variant="gradient"
+                    color="blue"
+                    className="mb-4 grid h-28 place-items-center"
+                >
+                    <Typography variant="h3" color="white">{
+                        isSignin ? 'Sign In' : 'Sign Up'
+                    }
+                    </Typography>
+                </CardHeader>
+                <CardBody className="flex flex-col gap-4">
+                    {isSignin ?
+                        <form className="mt-12 flex flex-col gap-4">
+                            <TextField label="请输入用户名" size="small" value={loginUsername} onChange={(e) => {
+                                setLoginUsername(e.target.value)
+                                setIsFormValid(e.target.value && loginPassword)
+                            }
+                            }></TextField>
 
-                </Typography>
-            </CardHeader>
-            <CardBody>
-                <Tabs value={activeTab} className="overflow-visible">
-                    <TabsHeader className="relative z-0 ">
-                        <Tab value="login" onClick={() => setActiveTab("login")}>
-                            登录
-                        </Tab>
-                        <Tab value="register" onClick={() => setActiveTab("register")}>
-                            注册
-                        </Tab>
-                    </TabsHeader>
-                    <TabsBody
-                        className="!overflow-x-hidden !overflow-y-visible"
-                        animate={{
-                            initial: {
-                                x: activeTab === "login" ? 400 : -400,
-                            },
-                            mount: {
-                                x: 0,
-                            },
-                            unmount: {
-                                x: activeTab === "login" ? 400 : -400,
-                            },
-                        }}
-                    >
-                        <TabPanel value="login" className="p-0">
-                            {/* <Typography color="gray" className="mt-1 font-normal">输入登录信息</Typography> */}
-                            <form className="mt-12 flex flex-col gap-4">
-                                <div className="mb-4 flex flex-col gap-6">
-                                    <Input size="lg" color="blue" outline={true} placeholder="UserName" value={loginUsername} onChange={
-                                        (e) => {
-                                            setLoginUsername(e.target.value);
-                                            setIsFormValid(e.target.value !== '' && loginUsername !== '')
-                                        }} />
-                                    <Input type="password" size="lg" placeholder="Password" value={loginPassword} onChange={
-                                        (e) => {
-                                            setLoginPassword(e.target.value)
-                                            setIsFormValid(e.target.value !== '' && loginPassword !== '')
-                                        }} />
-                                </div>
-                                <div className="flex items-center justify-center">
-                                    <Button
-                                        color="blue"
-                                        buttonType="filled"
-                                        block={false}
-                                        ripple="light"
-                                        size="lg" onClick={handleLogin}>
-                                        提交
-                                    </Button>
-                                </div>
-                            </form>
-                        </TabPanel>
-                        <TabPanel value="register" className="p-4">
-                            <form className="mt-12 flex flex-col gap-4">
-                                <div className="mb-4 flex flex-col gap-6">
-                                    <Input size="lg" placeholder="UserName" value={registerUsername} onChange={
-                                        (e) => {
-                                            setRegisterUsername(e.target.value)
-                                            setIsFormValid(e.target.value !== '' && registerUsername !== '')
-                                        }} />
-                                    <Input type="password" size="lg" placeholder="Password" value={registerPassword} onChange={
-                                        (e) => {
-                                            setRegisterPassword(e.target.value)
-                                            setIsFormValid(e.target.value !== '' && registerPassword !== '')
-                                        }} />
-                                    <Input type="password" size="lg" placeholder="Confirm Password" value={confirmPassword} onChange={
-                                        (e) => {
-                                            setConfirmPassword(e.target.value)
-                                            setIsFormValid(e.target.value !== '' && confirmPassword !== '' && registerPassword === confirmPassword)
-                                        }} />
-                                </div>
-                                <div className="flex items-center justify-center">
-                                    <Button
-                                        color="blue"
-                                        buttonType="filled"
-                                        block={false}
-                                        ripple="light"
-                                        size="lg" onClick={handleRegister}>
-                                        提交
-                                    </Button>
-                                </div>
-                            </form>
-                        </TabPanel>
-                    </TabsBody>
-                </Tabs>
-                {showAlert && (
-                    <FailAlert showAlert={showAlert} alertMsg={alertMsg} />
-                )}
-            </CardBody>
-        </Card>
+                            <TextField label="请输入密码" size="small" helperText="
+                            " value={loginPassword} onChange={(e) => { setLoginPassword(e.target.value); setIsFormValid(e.target.value && loginUsername) }}></TextField>
+                            <Button
+                                variant="gradient"
+                                fullWidth
+                                onClick={handleLogin}
+                                disabled={!isFormValid}
+                            >
+                                登录
+                            </Button>
+                        </form> :
+                        <form className="mt-12 flex flex-col gap-4">
+                            <TextField label="请输入用户名" size="small" value={registerUsername} onChange={(e) => {
+                                setIsFormValid(e.target.value && registerPassword && confirmPassword)
+                                setRegisterUsername(e.target.value)
+                            }}></TextField>
+                            <TextField label="请输入密码" size="small" value={registerPassword} onChange={(e) => {
+                                setIsFormValid(e.target.value && registerUsername && confirmPassword)
+                                setRegisterPassword(e.target.value)
+                            }}></TextField>
+                            <TextField label="确认密码" size="small" helperText="请确保两次密码输入一致" value={confirmPassword} onChange={(e) => {
+                                setIsFormValid(e.target.value && registerUsername && registerPassword && e.target.value === registerPassword)
+                                setConfirmPassword(e.target.value)
+                            }}></TextField>
+                            <Button
+                                variant="gradient"
+                                fullWidth
+                                onClick={handleRegister}
+                                disabled={!isFormValid}
+                            >
+                                注册
+                            </Button>
+                        </form>
+                    }
+                    {
+                        isSignin ?
+                            <Typography variant="small" className="mt-6 flex justify-center">
+                                没有账号？
+                                <Typography
+                                    as="button"
+                                    variant="small"
+                                    color="blue"
+                                    className="ml-1 font-bold"
+                                    onClick={() => {
+                                        setIsSignin(false);
+                                    }}
+                                >
+                                    注册
+                                </Typography>
+                            </Typography> :
+
+                            <Typography variant="small" className="mt-6 flex justify-center">
+                                已有账号？
+                                <Typography
+                                    as="button"
+                                    variant="small"
+                                    color="blue"
+                                    className="ml-1 font-bold"
+                                    onClick={() => {
+                                        setIsSignin(true);
+                                    }}
+                                >
+                                    登录
+                                </Typography>
+                            </Typography>
+                    }
+                    <FailAlert showAlert={showAlert} alertMsg={alertMsg} setShowAlert={setShowAlert}/ >
+                </CardBody>
+            </Card>
         </div>
     );
 }
