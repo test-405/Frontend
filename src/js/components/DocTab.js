@@ -7,7 +7,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { PDF_REQ_URL } from '../config';
 import '../../css/pdfViewer.css'
-import { IconButton, Typography, Input } from "@material-tailwind/react";
+import { IconButton, Typography } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon, MagnifyingGlassPlusIcon, MagnifyingGlassMinusIcon  } from "@heroicons/react/24/outline";
 
 
@@ -52,7 +52,6 @@ export function PDFViewer({ fileName }) {
   const fetchPDFFile = async () => {
     try {
       const token = Cookies.get('authToken');
-      // TODO: change pdf path
       const response = await axios.get(PDF_REQ_URL, {
         responseType: 'blob',
         withCredentials: true, // 发送请求时带上cookie
