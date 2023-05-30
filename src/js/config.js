@@ -6,4 +6,5 @@ export const LOGIN_URL = API_URL + "/user/login";
 export const REGISTER_URL = API_URL + "/user/register";
 export const LOGOUT_URL = API_URL + "/user/logout";
 export const PDF_REQ_URL = API_URL+ "/pdf"
-export const LIBRARY_URL = API_URL + "/library"
+export const QUERY_LIBRARY_URL = API_URL + "/library"
+export const ADD_LIBRARY_URL = API_URL + "/library"
