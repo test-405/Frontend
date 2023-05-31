@@ -34,7 +34,7 @@ export default function LoginPage({ onLogin }) {
 
             Cookies.set('isLoggedIn', 'true');
 
-            const { token } = response.data
+            const token = response.data.data['access_token'];
 
             Cookies.set('authToken', token)
 

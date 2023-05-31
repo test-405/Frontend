@@ -1,10 +1,11 @@
-import { Popover, PopoverContent, PopoverHandler, Typography, Button, IconButton, Switch } from "@material-tailwind/react";
+import { Popover, PopoverContent, PopoverHandler, Typography, Button, IconButton } from "@material-tailwind/react";
 import React, { useState } from "react";
-import { TextField } from "@mui/material";
+import { TextField, Switch } from "@mui/material";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
 import { ADD_LIBRARY_URL } from '../config';
 
+import Cookies from 'js-cookie';
 
 
 export default function AddLibrary() {
@@ -20,11 +21,19 @@ export default function AddLibrary() {
 
     const handleAddLibrary = async () => {
         try {
+            const token = Cookies.get('authToken');
             const response = await axios.post(ADD_LIBRARY_URL, {
                 topic: topic,
                 desc: desc,
                 is_public: is_public
-            });
+            },{
+                withCredentials: true, // 发送请求时带上cookie
+                // 可选：如果需要传递其他请求头或参数，请在这里添加
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+            );
             console.log('添加文献库成功');
             console.log(response);
         } catch (error) {
@@ -61,9 +70,9 @@ export default function AddLibrary() {
                             </div>}
                             containerProps={{
                                 className: "-mt-5"
-                            }} 
+                            }}
                             checked={is_public}
-                            onChange={handleSwitchState}/>
+                            onChange={handleSwitchState} />
                         <Button className="w-1/2 self-center" variant="gradient" disabled={(!topic || !desc)} onClick={handleAddLibrary}>添加</Button>
                     </div>
                 </form>

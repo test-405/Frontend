@@ -6,6 +6,8 @@ import { TrashIcon, PencilSquareIcon, CheckCircleIcon, } from '@heroicons/react/
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { TextField, Checkbox } from '@mui/material';
 
+import AddLibrary from "./components/AddLibrary";
+
 const Library = () => {
   const [libraries, setLibraries] = useState([]);
   const [editId, setEditId] = useState(null);
@@ -15,12 +17,13 @@ const Library = () => {
     axios.get(QUERY_LIBRARY_URL, {
       params: {
         page_num: 1,
-        page_size: 1,
+        page_size: 10,  // from 1 to 10 展示多个libraries
       }
     })
       .then(response => {
         response = response.data;
-        setLibraries([...response.data, {
+        console.log(response.data.libraries)
+        setLibraries([...response.data.libraries, {
           library_id: 1,
           topic: 'test',
           desc: 'test',
@@ -109,6 +112,7 @@ const Library = () => {
             <Typography variant="h6" color="gray">暂无文献</Typography>
           </div>
         )}
+        < AddLibrary className="right-0"/>
     </div>
   );
 };
