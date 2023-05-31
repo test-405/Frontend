@@ -8,7 +8,7 @@ import { TextField, Checkbox } from '@mui/material';
 
 import AddLibrary from "./components/AddLibrary";
 
-const Library = () => {
+export const LibraryPage = () => {
   const [libraries, setLibraries] = useState([]);
   const [editId, setEditId] = useState(null);
   const [newTopic, setNewTopic] = useState(null);
@@ -181,4 +181,3 @@ const Library = () => {
   );
 };
 
-export default Library;

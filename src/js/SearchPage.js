@@ -11,7 +11,7 @@ import FailAlert from "./components/FailAlert";
 import { Paper, InputBase, Divider } from '@mui/material';
 
 
-export default function SearchPage() {
+export function SearchPage() {
 
     // new
     const [topic, setTopic] = useState('');
