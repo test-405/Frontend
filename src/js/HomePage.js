@@ -7,20 +7,20 @@ import { SideBar } from "./components/SideBar";
 export default function HomePage() {
 
   // tab selection for sidebar
-  const [activeTab, setActiveTab] = useState('主页');
+  const [selectedSideTab, setSelectedSideTab] = useState('主页');
 
   const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
-    console.log(activeTab);
+    setSelectedSideTab(tabName);
+    console.log(selectedSideTab);
   };
 
   return (
     <div className="flex">
       <SideBar handleTabClick={handleTabClick} />
       <div className="grow pl-4 pt-4">
-        {/* 根据 activeTab 的值显示对应的内容 */}
-        {activeTab === '主页' && <SearchPage />}
-        {activeTab === '文献库' && <LibraryPage />}
+        {/* 根据 selectedSideTab 的值显示对应的内容 */}
+        {selectedSideTab === '主页' && <SearchPage />}
+        {selectedSideTab === '文献库' && <LibraryPage />}
       </div>
     </div>
 

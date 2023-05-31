@@ -28,14 +28,6 @@ export default function App() {
       <div className="relative">
         <div className="sticky left-0 top-0">
           <NavTabs activeTab={openTab} setActiveTab={handleTabChange}/>
-          { openTab === '导航页' ? <div className="flex">
-            <SideBar handleTabClick={handleTabClick} />
-            <div className="grow pl-4 pt-4">
-              {/* 根据 activeTab 的值显示对应的内容 */}
-              {/* {activeTab === '主页' && <SearchPage />}
-              {activeTab === '文献库' && <LibraryPage />} */}
-            </div>
-          </div>:<></>}
         </div>
       </div>
     </TabsProvider>

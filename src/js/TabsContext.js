@@ -18,9 +18,11 @@ export const TabsProvider = ({ children }) => {
     const addTab = (newTab) => {
         setTabs(oldTabs => [...oldTabs, newTab]);
     }
+    
+    const [activeTab, setActiveTab] = useState(tabs[0].id);
 
     return (
-        <TabsContext.Provider value={{ tabs, setTabs, addTab }}>
+        <TabsContext.Provider value={{ tabs, setTabs, addTab, activeTab, setActiveTab }}>
             {children}
         </TabsContext.Provider>
     );

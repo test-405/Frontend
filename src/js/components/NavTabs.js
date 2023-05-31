@@ -20,8 +20,12 @@ import {
 import { PDFViewer } from './DocTab'
 
 
-export function NavTabs({ activeTab, setActiveTab }) {
-  const { tabs, setTabs, addTab } = useTabs();
+export function NavTabs() {
+  const { tabs, setTabs, addTab, activeTab, setActiveTab } = useTabs();
+  console.log('active',activeTab);
+  console.log('tabs',tabs);
+  
+
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]?.value);
 
@@ -34,10 +38,10 @@ export function NavTabs({ activeTab, setActiveTab }) {
     setActiveTab(prevTab);
   };
 
-  const handleTabChange = (tabName) => {
-    console.log('tab changed:', tabName);
-    setSelectedTab(tabName);
-    setActiveTab(tabName);
+  const handleTabChange = (id) => {
+    console.log('tab changed:', id);
+    setSelectedTab(id);
+    setActiveTab(id);
   };
 
   return (
@@ -46,7 +50,7 @@ export function NavTabs({ activeTab, setActiveTab }) {
         <TabsHeader>
           <div className="grid grid-cols-8 gap-2 w-full md:w-1/8">
             {tabs.map(({ value, icon, id, tabType }) => (
-              <Tab key={id} value={value} className="w-full md:w-1/8 relative" onClick={() => handleTabChange(value)}>
+              <Tab value={id} className="w-full md:w-1/8 relative" onClick={() => handleTabChange(id)}>
                 <div className="flex justify-start h-full items-center">
                   <div className="flex items-center mr-auto">
                     {React.createElement(icon, { className: "h-5 w-5 mr-2" })}
@@ -64,8 +68,8 @@ export function NavTabs({ activeTab, setActiveTab }) {
           </div>
         </TabsHeader>
         <TabsBody>
-          {tabs.map(({ value, id, tabBody }) => (
-            <TabPanel key={id} value={value}>
+          {tabs.map(({ id, tabBody }) => (
+            <TabPanel value={id}>
               {tabBody}
             </TabPanel>
           ))}
