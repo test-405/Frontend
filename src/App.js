@@ -3,6 +3,7 @@ import { SideBar } from "./js/components/SideBar";
 import React, { useState } from "react";
 import HomePage from "./js/HomePage";
 import LibraryPage from "./js/LibraryPage";
+import PaperPage from "./js/PaperPage";
 
 export default function App() {
 
@@ -31,6 +32,7 @@ export default function App() {
             {/* 根据 activeTab 的值显示对应的内容 */}
             {activeTab === '主页' && <HomePage />}
             {activeTab === '文献库' && <LibraryPage />}
+            {activeTab === 'test_paper' && <PaperPage />}
           </div>
         </div>:<></>}
       </div>
