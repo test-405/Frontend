@@ -11,7 +11,7 @@ import {
   // XMarkIcon,
   DocumentIcon,
 } from "@heroicons/react/24/outline";
-import TabsContext from "../TabsContext";
+import { useTabs, TabTypeEnum } from "../TabsContext";
 
 import {
   XMarkIcon
@@ -19,19 +19,13 @@ import {
 
 import { PDFViewer } from './DocTab'
 
-export function NavTabs({ activeTab, setActiveTab}) {
-  const [tabs, setTabs] = useState([
-    { value: '导航页', icon: HomeIcon, id: useId() },
-    { value: 'test', icon: DocumentIcon, id: useId() },
-  ]);
 
-  const addTab = (newTab) => {
-    setTabs(oldTabs => [...oldTabs, newTab]);
-  }
+export function NavTabs() {
+  const { tabs, setTabs, addTab, activeTab, setActiveTab } = useTabs();
+  console.log('active',activeTab);
+  console.log('tabs',tabs);
+  
 
-  // const { tabs, setTabs } = React.useContext(TabsContext);
-  // tabs.push({ value: 'cha', icon: XMarkIcon, id: useId(),})
-  // const [activeTab, setActiveTab] = useState('主页');
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]?.value);
 
@@ -44,51 +38,43 @@ export function NavTabs({ activeTab, setActiveTab}) {
     setActiveTab(prevTab);
   };
 
-  const handleTabChange = (tabName) => {
-    console.log('tab changed:',tabName);
-    setSelectedTab(tabName);
-    setActiveTab(tabName);
+  const handleTabChange = (id) => {
+    console.log('tab changed:', id);
+    setSelectedTab(id);
+    setActiveTab(id);
   };
 
   return (
     <div>
-      <TabsContext.Provider value={{ tabs, setTabs, addTab }}>
-        <Tabs value={activeTab}>
-          <TabsHeader>
-            <div className="grid grid-cols-8 gap-2 w-full md:w-1/8">
-              {tabs.map(({ value, icon, id }) => (
-                <Tab key={id} value={value} className="w-full md:w-1/8 relative" onClick={() => handleTabChange(value)}>
-                  <div className="flex justify-start h-full items-center">
-                    <div className="flex items-center mr-auto">
-                      {React.createElement(icon, { className: "h-5 w-5 mr-2" })}
-                      <p className="line-clamp-1 lg:line-clamp-none">{value}</p>
-                    </div>
-                    {value !== '导航页' && (<button
-                      className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-1 hover:shadow-md"
-                      onClick={() => handleCloseTab(id)}
-                    >
-                      <XMarkIcon className="h-5 w-5" />
-                    </button>)}
+      <Tabs value={activeTab}>
+        <TabsHeader>
+          <div className="grid grid-cols-8 gap-2 w-full md:w-1/8">
+            {tabs.map(({ value, icon, id, tabType }) => (
+              <Tab value={id} className="w-full md:w-1/8 relative" onClick={() => handleTabChange(id)}>
+                <div className="flex justify-start h-full items-center">
+                  <div className="flex items-center mr-auto">
+                    {React.createElement(icon, { className: "h-5 w-5 mr-2" })}
+                    <p className="line-clamp-1 lg:line-clamp-none">{value}</p>
                   </div>
-                </Tab>
-              ))}
-            </div>
-          </TabsHeader>
-          <TabsBody>
-            {tabs.map(({ value, id }) => (
-              <TabPanel key={id} value={value}>
-                {
-                  value === '导航页' ? (
-                    <></>
-                  ) : (<div>
-                    <PDFViewer fileName={value} />
-                  </div>)
-                }
-              </TabPanel>
+                  {tabType !== TabTypeEnum.Home && (<button
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-1 hover:shadow-md"
+                    onClick={() => handleCloseTab(id)}
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </button>)}
+                </div>
+              </Tab>
             ))}
-          </TabsBody>
-        </Tabs>
-      </TabsContext.Provider>
+          </div>
+        </TabsHeader>
+        <TabsBody>
+          {tabs.map(({ id, tabBody }) => (
+            <TabPanel value={id}>
+              {tabBody}
+            </TabPanel>
+          ))}
+        </TabsBody>
+      </Tabs>
     </div>
   );
 }

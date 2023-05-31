@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import TabsContext from '../TabsContext';
+import { useTabs } from '../TabsContext';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -12,7 +12,7 @@ import { ArrowRightIcon, ArrowLeftIcon, MagnifyingGlassPlusIcon, MagnifyingGlass
 
 
 export function DocTab(value) {
-  const { tabs, setTabs, addTab } = useContext(TabsContext);
+  const { tabs, setTabs, addTab } = useTabs();
 
   addTab({ value: value })
   return (
