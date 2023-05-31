@@ -17,17 +17,9 @@ export default function FailAlert({ showAlert, alertMsg, setShowAlert }) {
         <Fragment>
             <Alert
                 variant="gradient"
-                open={showAlert}
                 color="red"
+                open={showAlert}
                 icon={<ExclamationTriangleIcon className="h-6 w-6" />}
-                onClose={() => {
-                    setShowAlert(false)
-                    console.log('close')
-                }}
-                animate={{
-                    mount: { y: 0 },
-                    unmount: { y: 100 },
-                }}
             >
                 {alertMsg}
             </Alert>
