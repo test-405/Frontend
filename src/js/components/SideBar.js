@@ -44,6 +44,12 @@ export function SideBar({ handleTabClick }) {
               </ListItemPrefix>
               {showText && '文献库'}
             </ListItem>
+            <ListItem onClick={()=>handleTabClick('test_paper')}>
+              <ListItemPrefix>
+                <BookOpenIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              {showText && 'test_paper'}
+            </ListItem>
           </List>
         </Card>
   );
