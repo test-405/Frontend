@@ -9,15 +9,19 @@ import { PDF_REQ_URL } from '../config';
 import '../../css/pdfViewer.css'
 import { IconButton, Typography } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon, MagnifyingGlassPlusIcon, MagnifyingGlassMinusIcon  } from "@heroicons/react/24/outline";
+import CommentList from '../CommentList';
 
 
-export function DocTab(value) {
-  const { tabs, setTabs, addTab } = useTabs();
-
-  addTab({ value: value })
+export function DocTab(fileName) {
+  
   return (
     // add a doc tab
-    <div></div>
+    <div className='flex flex-row justify-center'>
+      <div className='w-4/5'>
+      <PDFViewer fileName={fileName}/>
+      </div>
+      <CommentList />
+    </div>
   );
 }
 

@@ -8,4 +8,5 @@ export const LOGOUT_URL = API_URL + "/user/logout";
 export const PDF_REQ_URL = API_URL+ "/pdf"
 export const QUERY_LIBRARY_URL = API_URL + "/library"
 export const ADD_LIBRARY_URL = API_URL + "/library"
-export const SEARCH_PAPER_URL = API_URL + "/paper"
+export const QUERY_COMMENT_URL = API_URL + "/comment"
+export const QUERY_PAPER_URL = API_URL + "/paper"

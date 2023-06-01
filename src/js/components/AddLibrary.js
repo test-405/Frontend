@@ -44,35 +44,37 @@ export default function AddLibrary() {
 
     // console.log(InputStylesType)
     return (
-        <Popover placement="top">
-            <PopoverHandler>
-                <IconButton size="lg" className="rounded-full">
-                    <PlusIcon className="h-5 w-5 transition-transform group-hover:rotate-45" />
-                </IconButton>
-            </PopoverHandler>
-            <PopoverContent className="w-96">
-                <Typography
-                    variant="h6"
-                    color="blue-gray"
-                    className="mb-6"
-                >
-                    添加文献库
-                </Typography>
-                <form>
-                    <div className="flex flex-col gap-6">
-                        <TextField size="small" label="主题" required onChange={(e) => { setTopic(e.target.value) }}></TextField>
-                        <TextField size="small" label="描述" required onChange={(e) => { setDesc(e.target.value) }}></TextField>
-                        <FormControl>
-                            <FormControlLabel required control={
-                                <Checkbox icon={<VisibilityOff />} checkedIcon={<Visibility />} checked={is_public} onChange={
-                                    () => {
-                                        setPublic(!is_public)
-                                    }
-                                } />} label="是否公开" /></FormControl>
-                        <Button className="w-1/2 self-center" variant="gradient" disabled={(!topic || !desc)} onClick={handleAddLibrary}>添加</Button>
-                    </div>
-                </form>
-            </PopoverContent>
-        </Popover >
+        <div className="fixed bottom-20 right-20">
+            <Popover placement="top">
+                <PopoverHandler>
+                    <IconButton size="lg" className="rounded-full">
+                        <PlusIcon className="h-5 w-5 transition-transform group-hover:rotate-45" />
+                    </IconButton>
+                </PopoverHandler>
+                <PopoverContent className="w-96">
+                    <Typography
+                        variant="h6"
+                        color="blue-gray"
+                        className="mb-6"
+                    >
+                        添加文献库
+                    </Typography>
+                    <form>
+                        <div className="flex flex-col gap-6">
+                            <TextField size="small" label="主题" required onChange={(e) => { setTopic(e.target.value) }}></TextField>
+                            <TextField size="small" label="描述" required onChange={(e) => { setDesc(e.target.value) }}></TextField>
+                            <FormControl>
+                                <FormControlLabel required control={
+                                    <Checkbox icon={<VisibilityOff />} checkedIcon={<Visibility />} checked={is_public} onChange={
+                                        () => {
+                                            setPublic(!is_public)
+                                        }
+                                    } />} label="是否公开" /></FormControl>
+                            <Button className="w-1/2 self-center" variant="gradient" disabled={(!topic || !desc)} onClick={handleAddLibrary}>添加</Button>
+                        </div>
+                    </form>
+                </PopoverContent>
+            </Popover >
+        </div>
     );
 }

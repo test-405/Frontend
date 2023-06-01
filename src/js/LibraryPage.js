@@ -24,13 +24,9 @@ export const LibraryPage = () => {
       }
     })
       .then(response => {
-        // response = response.data;
-        // setLibraries([...response.data.libraries, {
-        //   library_id: 1,
-        //   topic: 'test',
-        //   desc: 'test',
-        //   is_public: true,
-        // }]);
+        response = response.data;
+        // add a new library to libraries
+        setLibraries([...response.data.libraries]);
       })
       .catch(error => {
         console.error(error);
