@@ -1,6 +1,7 @@
 import React, { useContext, createContext, useState, useId } from 'react';
-import { PDFViewer } from './components/DocTab'
+import { DocTab } from './components/DocTab'
 import HomePage from './HomePage'
+import { PaperPage } from './PaperPage'
 
 import {
     HomeIcon,
@@ -12,7 +13,8 @@ const TabsContext = createContext();
 export const TabsProvider = ({ children }) => {
     const [tabs, setTabs] = useState([
         { value: '导航页', icon: HomeIcon, id: useId(), tabType: TabTypeEnum.Home, tabBody: <HomePage /> },
-        { value: 'test', icon: DocumentIcon, id: useId(), tabType: TabTypeEnum.Paper, tabBody: <PDFViewer fileName="test"/> },
+        { value: 'test', icon: DocumentIcon, id: useId(), tabType: TabTypeEnum.Paper, tabBody: <DocTab fileName="test"/> },
+        { value: 'paper', icon: DocumentIcon, id: useId(), tabType:  TabTypeEnum.PaperList, tabBody: <PaperPage />}
     ]);
 
     const addTab = (newTab) => {
@@ -36,4 +38,5 @@ export const TabTypeEnum = Object.freeze({
   Home: 0,
   Library: 1,
   Paper: 2,
+  PaperList: 3,
 })

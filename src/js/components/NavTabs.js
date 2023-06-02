@@ -6,18 +6,12 @@ import {
   TabsBody,
   TabPanel,
 } from "@material-tailwind/react";
-import {
-  HomeIcon,
-  // XMarkIcon,
-  DocumentIcon,
-} from "@heroicons/react/24/outline";
 import { useTabs, TabTypeEnum } from "../TabsContext";
 
 import {
   XMarkIcon
 } from "@heroicons/react/20/solid";
 
-import { PDFViewer } from './DocTab'
 
 
 export function NavTabs() {
