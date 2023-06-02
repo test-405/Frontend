@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { IconButton, Typography, Card, CardBody, CardFooter, Button } from "@material-tailwind/react";
-import { QUERY_LIBRARY_URL } from './config';
+import { DELETE_LIBRARY_URL, PUT_LIBRARY_URL, QUERY_LIBRARY_URL } from './config';
 import { TrashIcon, PencilSquareIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { TextField, Checkbox } from '@mui/material';
 
 import AddLibrary from "./components/AddLibrary";
+import Cookies from 'js-cookie';
 
 export const LibraryPage = () => {
   const [libraries, setLibraries] = useState([]);
@@ -25,26 +26,20 @@ export const LibraryPage = () => {
     })
       .then(response => {
         response = response.data;
-        // add a new library to libraries
-        setLibraries([...response.data.libraries]);
+        setLibraries(response.data.libraries);
       })
       .catch(error => {
         console.error(error);
       });
   }, []);
 
-  useEffect(() => {
-    // setLibraries([...libraries, {
-    //   library_id: 1,
-    //   topic: 'test',
-    //   desc: 'test',
-    //   is_public: true,
-    // }])
-  }, []);
-
-
   const handleDelete = (id) => {
-    axios.delete(`/api/library/${id}`)
+    const token = Cookies.get('authToken');
+    axios.delete(DELETE_LIBRARY_URL + `/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         setLibraries(libraries.filter(library => library.id !== id));
       })
@@ -55,7 +50,8 @@ export const LibraryPage = () => {
 
   const handleEdit = (id) => {
     // first find the library with the id
-    const library = libraries.find(library => library.id === id);
+    const library = libraries.find(library => library.library_id === id);
+    const token = Cookies.get('authToken');
     // find the differences between the library and the new library
     // if there is no difference, then do nothing
     // if there is difference, then update the library
@@ -70,7 +66,11 @@ export const LibraryPage = () => {
       newLibrary.is_public = newIsPublic;
     }
     if (newTopic || newDesc || newIsPublic) {
-      axios.put(`/api/library/${id}`, newLibrary)
+      axios.put(PUT_LIBRARY_URL + `/${id}`, newLibrary, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(response => {
           setLibraries(libraries.map(library => {
             if (library.id === id) {
