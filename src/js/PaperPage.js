@@ -1,7 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { IconButton, Typography, Card, CardBody, CardFooter } from "@material-tailwind/react";
+import { DocumentIcon } from '@heroicons/react/24/outline'
+
 import { QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
+import { useTabs, TabTypeEnum } from './TabsContext';
+import { DocTab } from './components/DocTab';
 
 const TABLE_HEAD = ["Paper_id", "Title", "Authors", "publisher", "Year", "Source", "Action"];
 
@@ -21,12 +25,12 @@ export const PaperPage = ({library_id}) => {
                 response = response.data;
                 console.log(response.data.papers)
                 setPapers([...response.data.papers, {
-                    paper_id: 1,
+                    paper_id: 0,
                     title: "test_title",
                     authors: "test_authors",
                     publisher: "test_publisher",
                     year: 2023,
-                    source: "test_source",
+                    source: "647989fe11171a8078ec0461",
                 }]);
                 console.log('papers', papers)
             })
@@ -34,6 +38,30 @@ export const PaperPage = ({library_id}) => {
                 console.error(error);
             });
     }, []);
+
+    const { tabs, addTab, setActiveTab } = useTabs();
+
+    const handleTabClick = (paper) => {
+        console.log("get paper " + paper.paper_id)
+        const tabId = 'paper:' + paper.paper_id;
+        if(tabs.find(tab => tab.id === tabId)) {
+            console.log('tab already exists');
+            console.log('try to change to tab ' + tabId);
+            setActiveTab(tabId);
+            return;
+        }
+
+        const newTab = {
+            value: paper.title,
+            icon: DocumentIcon,
+            tabType:  TabTypeEnum.Paper,
+            id: tabId,
+            tabBody: <DocTab paper_id={paper.paper_id} />
+        };
+
+        addTab(newTab);
+        setActiveTab(newTab.id);
+    }
 
     return (
         <div className="flex flex-col">
@@ -57,36 +85,36 @@ export const PaperPage = ({library_id}) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {papers.map(({ paper_id, title, authors, publisher, year, source }, index) => (
-                                        <tr key={paper_id} className="even:bg-blue-gray-50/50">
+                                    {papers.map(paper => (
+                                        <tr key={paper.paper_id} className="even:bg-blue-gray-50/50" onClick={() => handleTabClick(paper)}>
                                             <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper_id}
+                                                    {paper.paper_id}
                                                 </Typography>
                                             </td>
                                             <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {title}
+                                                    {paper.title}
                                                 </Typography>
                                             </td>
                                             <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {authors}
+                                                    {paper.authors}
                                                 </Typography>
                                             </td>
                                             <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {publisher}
+                                                    {paper.publisher}
                                                 </Typography>
                                             </td>
                                             <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {year}
+                                                    {paper.year}
                                                 </Typography>
                                             </td>
                                             <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {source}
+                                                    {paper.source}
                                                 </Typography>
                                             </td>
                                             <td className="p-4">

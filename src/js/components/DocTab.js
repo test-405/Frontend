@@ -12,13 +12,13 @@ import { ArrowRightIcon, ArrowLeftIcon, MagnifyingGlassPlusIcon, MagnifyingGlass
 import CommentList from '../CommentList';
 
 
-export function DocTab(fileName) {
+export function DocTab({ paper_id }) {
   
   return (
     // add a doc tab
     <div className='flex flex-row justify-center'>
       <div className='w-4/5'>
-      <PDFViewer fileName={fileName}/>
+      <PDFViewer paper_id={paper_id}/>
       </div>
       <CommentList />
     </div>
@@ -26,7 +26,7 @@ export function DocTab(fileName) {
 }
 
 
-export function PDFViewer({ fileName }) {
+export function PDFViewer({ paper_id }) {
   const [fileUrl, setFileUrl] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -56,15 +56,13 @@ export function PDFViewer({ fileName }) {
   const fetchPDFFile = async () => {
     try {
       const token = Cookies.get('authToken');
-      const response = await axios.get(PDF_REQ_URL, {
+      const pdf_url = PDF_REQ_URL + `/${paper_id}` + '/pdf'
+      const response = await axios.get(pdf_url, {
         responseType: 'blob',
         withCredentials: true, // 发送请求时带上cookie
         // 可选：如果需要传递其他请求头或参数，请在这里添加
         headers: {
           Authorization: `Bearer ${token}`,
-        },
-        params: {
-          fileName: fileName,
         }
       });
 
