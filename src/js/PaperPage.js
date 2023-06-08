@@ -5,74 +5,14 @@ import { QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
 
 const TABLE_HEAD = ["Paper_id", "Title", "Authors", "publisher", "Year", "Source", "Action"];
 
-const TABLE_ROWS = [
-    {
-        paper_id: 1,
-        title: "test_title",
-        authors: "test_authors",
-        publisher: "test_publisher",
-        year: 2023,
-        source: "test_source",
-    },
-    {
-        paper_id: 1,
-        title: "test_title",
-        authors: "test_authors",
-        publisher: "test_publisher",
-        year: 2023,
-        source: "test_source",
-    },
-    {
-        paper_id: 1,
-        title: "test_title",
-        authors: "test_authors",
-        publisher: "test_publisher",
-        year: 2023,
-        source: "test_source",
-    },
-];
-
-export const PaperPage = () => {
-    const [libraries, setLibraries] = useState([]);
-    const [editId, setEditId] = useState(null);
+export const PaperPage = ({library_id}) => {
+    console.log('PaperPage library_id', library_id);
     const [papers, setPapers] = useState([]);
-
-    useEffect(() => {
-        axios.get(QUERY_LIBRARY_URL, {
-            params: {
-                page_num: 1,
-                page_size: 10,  // from 1 to 10 展示多个libraries
-            }
-        })
-            .then(response => {
-                response = response.data;
-                console.log(response.data.libraries)
-                setLibraries([...response.data.libraries, {
-                    library_id: 1,
-                    topic: 'test',
-                    desc: 'test',
-                    is_public: true,
-                }]);
-                console.log('libraries', libraries)
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }, []);
-
-    useEffect(() => {
-        setLibraries([...libraries, {
-            library_id: 1,
-            topic: 'test',
-            desc: 'test',
-            is_public: true,
-        }])
-    }, []);
 
     useEffect(() => {
         axios.get(QUERY_PAPER_URL, {
             params: {
-                library_id: 1,
+                library_id: library_id,
                 page_num: 1,
                 page_size: 10,
             }
@@ -95,12 +35,10 @@ export const PaperPage = () => {
             });
     }, []);
 
-    console.log('libraries', libraries)
     return (
         <div className="flex flex-col">
-            {libraries.length > 0 ? (
+            {papers.length > 0 ? (
                 <Fragment className="left-0 right-10">
-                    {libraries.map(library => (
                         <Card className="overflow-scroll h-full w-full">
                             <table className="w-full min-w-max table-auto text-left">
                                 <thead>
@@ -167,7 +105,6 @@ export const PaperPage = () => {
                                 </tbody>
                             </table>
                         </Card>
-                    ))}
                 </Fragment>)
                 : (
                     <div className="flex center">

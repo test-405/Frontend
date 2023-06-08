@@ -6,15 +6,16 @@ import { PaperPage } from './PaperPage'
 import {
     HomeIcon,
     DocumentIcon,
+    BuildingLibraryIcon,
 } from "@heroicons/react/24/outline";
 
 const TabsContext = createContext();
 
 export const TabsProvider = ({ children }) => {
     const [tabs, setTabs] = useState([
-        { value: '导航页', icon: HomeIcon, id: useId(), tabType: TabTypeEnum.Home, tabBody: <HomePage /> },
-        { value: 'test', icon: DocumentIcon, id: useId(), tabType: TabTypeEnum.Paper, tabBody: <DocTab fileName="test"/> },
-        { value: 'paper', icon: DocumentIcon, id: useId(), tabType:  TabTypeEnum.PaperList, tabBody: <PaperPage />}
+        { value: '导航页', icon: HomeIcon, id: '0', tabType: TabTypeEnum.Home, tabBody: <HomePage /> },
+        { value: 'test', icon: DocumentIcon, id: 'paper:0', tabType: TabTypeEnum.Paper, tabBody: <DocTab fileName="test"/> },
+        { value: 'paper', icon: BuildingLibraryIcon, id: 'library:0', tabType:  TabTypeEnum.PaperList, tabBody: <PaperPage library_id={1} />}
     ]);
 
     const addTab = (newTab) => {
