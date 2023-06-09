@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment, useRef } from 'react';
 import axios from 'axios';
 import { IconButton, Typography, Card, CardBody, CardFooter } from "@material-tailwind/react";
 import { DocumentIcon } from '@heroicons/react/24/outline'
+import Cookies from 'js-cookie';
 
 import { QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
 import { useTabs, TabTypeEnum } from './TabsContext';
@@ -17,11 +18,17 @@ export const PaperPage = ({library_id}) => {
     const [refresh, setRefresh] = useState(false);
 
     const fetchPapers = async () => {
+        const token = Cookies.get('authToken');
+
         axios.get(QUERY_PAPER_URL, {
             params: {
                 library_id: library_id,
                 page_num: 2,
                 page_size: 10,
+            },
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
             }
         })
             .then(response => {
