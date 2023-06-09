@@ -103,7 +103,7 @@ export default function LoginPage({ onLogin }) {
                             }
                             }></TextField>
 
-                            <TextField label="请输入密码" size="small" helperText="
+                            <TextField label="请输入密码" size="small"  type="password"  helperText="
                             " value={loginPassword} onChange={(e) => { setLoginPassword(e.target.value); setIsFormValid(e.target.value && loginUsername) }}></TextField>
                             <Button
                                 variant="gradient"
@@ -119,11 +119,11 @@ export default function LoginPage({ onLogin }) {
                                 setIsFormValid(e.target.value && registerPassword && confirmPassword)
                                 setRegisterUsername(e.target.value)
                             }}></TextField>
-                            <TextField label="请输入密码" size="small" value={registerPassword} onChange={(e) => {
+                            <TextField label="请输入密码" size="small" type="password" value={registerPassword} onChange={(e) => {
                                 setIsFormValid(e.target.value && registerUsername && confirmPassword)
                                 setRegisterPassword(e.target.value)
                             }}></TextField>
-                            <TextField label="确认密码" size="small" helperText="请确保两次密码输入一致" value={confirmPassword} onChange={(e) => {
+                            <TextField label="确认密码" size="small" helperText="请确保两次密码输入一致" type="password" value={confirmPassword} onChange={(e) => {
                                 setIsFormValid(e.target.value && registerUsername && registerPassword && e.target.value === registerPassword)
                                 setConfirmPassword(e.target.value)
                             }}></TextField>
