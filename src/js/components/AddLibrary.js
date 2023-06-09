@@ -1,5 +1,5 @@
 import { Popover, PopoverContent, PopoverHandler, Typography, Button, IconButton } from "@material-tailwind/react";
-import React, { useState } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { TextField, Checkbox, Switch, FormControl, FormControlLabel } from "@mui/material";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Visibility, VisibilityOff } from '@mui/icons-material'
@@ -9,15 +9,28 @@ import { ADD_LIBRARY_URL } from '../config';
 import Cookies from 'js-cookie';
 
 
-export default function AddLibrary() {
+function AddLibrary({ onRefresh }, ref) {
 
     const [topic, setTopic] = useState(null)
     const [desc, setDesc] = useState(null)
     const [is_public, setPublic] = useState(false)
 
-    const handleSwitchState = (e) => {
-        console.log(e.target.checked)
-        setPublic(e.target.checked)
+    const [popoverOpen, setPopoverOpen] = useState(false);
+
+    const resetState = () => {
+        console.log("in reset")
+        setPopoverOpen(false);
+        setDesc('');
+        setTopic('');
+        setPublic(false);
+    };
+
+    useImperativeHandle(ref, () => ({
+        resetState
+    }));
+
+    const handlePopover = () => {
+        setPopoverOpen(!popoverOpen);
     };
 
     const handleAddLibrary = async () => {
@@ -35,8 +48,15 @@ export default function AddLibrary() {
                 },
             }
             );
-            console.log('添加文献库成功');
-            console.log(response);
+            
+            if (response.status === 200 && response.data['code'] === 0) {
+                console.log('添加paper成功');
+                console.log(response);
+                onRefresh();
+            } else {
+                console.log('添加paper失败');
+                console.log(response);
+            }
         } catch (error) {
             console.log("添加文献库失败");
         }
@@ -45,7 +65,7 @@ export default function AddLibrary() {
     // console.log(InputStylesType)
     return (
         <div className="fixed bottom-20 right-20">
-            <Popover placement="top">
+            <Popover placement="top" open={popoverOpen} handler={handlePopover}>
                 <PopoverHandler>
                     <IconButton size="lg" className="rounded-full">
                         <PlusIcon className="h-5 w-5 transition-transform group-hover:rotate-45" />
@@ -61,8 +81,8 @@ export default function AddLibrary() {
                     </Typography>
                     <form>
                         <div className="flex flex-col gap-6">
-                            <TextField size="small" label="主题" required onChange={(e) => { setTopic(e.target.value) }}></TextField>
-                            <TextField size="small" label="描述" required onChange={(e) => { setDesc(e.target.value) }}></TextField>
+                            <TextField size="small" label="主题" value={topic} required onChange={(e) => { setTopic(e.target.value) }}></TextField>
+                            <TextField size="small" label="描述" value={desc} required onChange={(e) => { setDesc(e.target.value) }}></TextField>
                             <FormControl>
                                 <FormControlLabel required control={
                                     <Checkbox icon={<VisibilityOff />} checkedIcon={<Visibility />} checked={is_public} onChange={
@@ -78,3 +98,5 @@ export default function AddLibrary() {
         </div>
     );
 }
+
+export default forwardRef(AddLibrary)

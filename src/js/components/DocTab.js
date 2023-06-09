@@ -20,7 +20,7 @@ export function DocTab({ paper_id }) {
       <div className='w-4/5'>
       <PDFViewer paper_id={paper_id}/>
       </div>
-      <CommentList />
+      <CommentList paper_id={paper_id} />
     </div>
   );
 }

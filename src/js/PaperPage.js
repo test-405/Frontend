@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
 import axios from 'axios';
 import { IconButton, Typography, Card, CardBody, CardFooter } from "@material-tailwind/react";
 import { DocumentIcon } from '@heroicons/react/24/outline'
@@ -6,6 +6,7 @@ import { DocumentIcon } from '@heroicons/react/24/outline'
 import { QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
 import { useTabs, TabTypeEnum } from './TabsContext';
 import { DocTab } from './components/DocTab';
+import AddPaper from './components/AddPaper';
 
 const TABLE_HEAD = ["Paper_id", "Title", "Authors", "publisher", "Year", "Source", "Action"];
 
@@ -13,31 +14,46 @@ export const PaperPage = ({library_id}) => {
     console.log('PaperPage library_id', library_id);
     const [papers, setPapers] = useState([]);
 
-    useEffect(() => {
+    const [refresh, setRefresh] = useState(false);
+
+    const fetchPapers = async () => {
         axios.get(QUERY_PAPER_URL, {
             params: {
                 library_id: library_id,
-                page_num: 1,
+                page_num: 2,
                 page_size: 10,
             }
         })
             .then(response => {
                 response = response.data;
                 console.log(response.data.papers)
-                setPapers([...response.data.papers, {
-                    paper_id: 0,
-                    title: "test_title",
-                    authors: "test_authors",
-                    publisher: "test_publisher",
-                    year: 2023,
-                    source: "647989fe11171a8078ec0461",
-                }]);
+                setPapers([...response.data.papers]);
                 console.log('papers', papers)
             })
             .catch(error => {
                 console.error(error);
             });
+    };
+
+    useEffect(() => {
+        fetchPapers();
     }, []);
+
+    //  for add refresh
+    const addPaperRef = useRef();
+
+    useEffect(() => {
+        if(refresh) {
+            fetchPapers();
+            addPaperRef.current.resetState();
+            setRefresh(false);
+        }
+    }, [refresh]);
+
+    const handleComponentRefresh = () => {
+        setRefresh(true);
+    };
+    // end for add refresh 
 
     const { tabs, addTab, setActiveTab } = useTabs();
 
@@ -139,6 +155,7 @@ export const PaperPage = ({library_id}) => {
                         <Typography variant="h6" color="gray">暂无文献</Typography>
                     </div>
                 )}
+            < AddPaper className="right-0" ref={addPaperRef} library_id={library_id} onRefresh={handleComponentRefresh} />
         </div >
     );
 };
