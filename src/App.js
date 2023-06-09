@@ -19,7 +19,6 @@ export default function App() {
   // tab selection for navbars
   const [openTab, setOpenTab] = useState("导航页");
   const handleTabChange = (tabName) => {
-    console.log(tabName);
     setOpenTab(tabName);
   };
 
