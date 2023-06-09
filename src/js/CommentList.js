@@ -136,7 +136,7 @@ export default function CommentList({ paper_id }) {
 
   return (
 
-    <Card className="grow flex relative" id="wanrui">
+    <Card className="grow flex relative">
       <List>
         {comments.map((comment) => (
           <ListItem key={comment.comment_id}>

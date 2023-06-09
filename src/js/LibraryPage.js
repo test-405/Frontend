@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
 import axios from 'axios';
 import { IconButton, Typography, Card, CardBody, CardFooter, Button } from "@material-tailwind/react";
 import { DELETE_LIBRARY_URL, PUT_LIBRARY_URL, QUERY_LIBRARY_URL } from './config';
@@ -19,11 +19,13 @@ export const LibraryPage = () => {
   const [newIsPublic, setNewIsPublic] = useState(null);
   const [showNoLibrary, setShowNoLibrary] = useState(true);
 
-  useEffect(() => {
+  const [refresh, setRefresh] = useState(false);
+
+  const fetchLibraries = async () => {
     axios.get(QUERY_LIBRARY_URL, {
       params: {
         page_num: 1,
-        page_size: 10,  // from 1 to 10 展示多个libraries
+        page_size: 100,  // from 1 to 10 展示多个libraries
       }
     })
       .then(response => {
@@ -33,7 +35,27 @@ export const LibraryPage = () => {
       .catch(error => {
         console.error(error);
       });
+  };
+
+  useEffect(() => {
+    fetchLibraries();
   }, []);
+
+  //  for add refresh
+  const addLibraryRef = useRef();
+
+  useEffect(() => {
+      if(refresh) {
+          fetchLibraries();
+          addLibraryRef.current.resetState();
+          setRefresh(false);
+      }
+  }, [refresh]);
+
+  const handleComponentRefresh = () => {
+      setRefresh(true);
+  };
+  // end for add refresh 
 
   const handleDelete = (id) => {
     const token = Cookies.get('authToken');
@@ -216,7 +238,7 @@ export const LibraryPage = () => {
               : null}
           </div>
         )}
-      < AddLibrary className="right-0" />
+      < AddLibrary className="right-0" ref={addLibraryRef} onRefresh={handleComponentRefresh} />
     </div>
   );
 };
