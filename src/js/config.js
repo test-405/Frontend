@@ -20,5 +20,7 @@ export const DELETE_COMMENT_URL = API_URL + "/comment"
 export const QUERY_PAPER_URL = API_URL + "/paper"
 export const QUERY_PDF_URL = API_URL + "/paper"
 export const PUT_PDF_URL = API_URL + "/paper"
+export const MODIFY_PAPER_URL = API_URL + "/paper"
+export const DELETE_PAPER_URL = API_URL + "/paper"
 
 export const PDF_REQ_URL = API_URL+ "/pdf"

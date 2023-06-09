@@ -1,18 +1,20 @@
 import React, { useState, useEffect, Fragment, useRef } from 'react';
 import axios from 'axios';
-import { IconButton, Typography, Card, CardBody, CardFooter } from "@material-tailwind/react";
+import { IconButton, Typography, Card, Button } from "@material-tailwind/react";
 import { DocumentIcon } from '@heroicons/react/24/outline'
 
-import { QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
+import { TextField } from '@mui/material';
+
+import { MODIFY_PAPER_URL, QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
 import { useTabs, TabTypeEnum } from './TabsContext';
 import { DocTab } from './components/DocTab';
 import AddPaper from './components/AddPaper';
 
 import Cookies from 'js-cookie';
 
-const TABLE_HEAD = ["Paper_id", "Title", "Authors", "publisher", "Year", "Source", "Action"];
+let TABLE_HEAD = ["Title", "Authors", "Publisher", "Year", "Action"];
 
-export const PaperPage = ({library_id}) => {
+export const PaperPage = ({ library_id }) => {
     console.log('PaperPage library_id', library_id);
     const token = Cookies.get('authToken');
     const [papers, setPapers] = useState([]);
@@ -20,76 +22,93 @@ export const PaperPage = ({library_id}) => {
     const [refresh, setRefresh] = useState(false);
 
     const fetchPapers = async () => {
-        axios.get(QUERY_PAPER_URL, {
-            params: {
-                library_id: library_id,
-                page_num: 2,
-                page_size: 10,
-            },
+        const [isYours, setIsYours] = useState(true);
+        const [editPaper, setEditPaper] = useState(null);
+
+
+        useEffect(() => {
+            axios.get(QUERY_PAPER_URL, {
+                params: {
+                    library_id: library_id,
+                    page_num: 2,
+                    page_size: 10,
+                },
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
-        }, )
-            .then(response => {
-                response = response.data;
-                console.log(response.data.papers)
-                setPapers([...response.data.papers]);
-                console.log('papers', papers)
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
+            },)
+                .then(response => {
+                    response = response.data;
+                    console.log(response.data.papers)
+                    // setIsYours(response.data.is_yours);
+                    console.log('isYours', isYours)
+                    if (!isYours) {
+                        TABLE_HEAD = ["Title", "Authors", "Publisher", "Year"];
+                    }
+                    setPapers([...response.data.papers, {
+                        paper_id: 0,
+                        title: "test_title",
+                        authors: "test_authors",
+                        publisher: "test_publisher",
+                        year: 2023,
+                        source: "647989fe11171a8078ec0461",
+                    }]);
+                    console.log('papers', papers)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
 
-    useEffect(() => {
-        fetchPapers();
-    }, []);
-
-    //  for add refresh
-    const addPaperRef = useRef();
-
-    useEffect(() => {
-        if(refresh) {
+        useEffect(() => {
             fetchPapers();
-            addPaperRef.current.resetState();
-            setRefresh(false);
-        }
-    }, [refresh]);
+        }, []);
 
-    const handleComponentRefresh = () => {
-        setRefresh(true);
-    };
-    // end for add refresh 
+        //  for add refresh
+        const addPaperRef = useRef();
 
-    const { tabs, addTab, setActiveTab } = useTabs();
+        useEffect(() => {
+            if (refresh) {
+                fetchPapers();
+                addPaperRef.current.resetState();
+                setRefresh(false);
+            }
+        }, [refresh]);
 
-    const handleTabClick = (paper) => {
-        console.log("get paper " + paper.paper_id)
-        const tabId = 'paper:' + paper.paper_id;
-        if(tabs.find(tab => tab.id === tabId)) {
-            console.log('tab already exists');
-            console.log('try to change to tab ' + tabId);
-            setActiveTab(tabId);
-            return;
-        }
-
-        const newTab = {
-            value: paper.title,
-            icon: DocumentIcon,
-            tabType:  TabTypeEnum.Paper,
-            id: tabId,
-            tabBody: <DocTab paper_id={paper.paper_id} />
+        const handleComponentRefresh = () => {
+            setRefresh(true);
         };
+        // end for add refresh 
 
-        addTab(newTab);
-        setActiveTab(newTab.id);
-    }
+        const { tabs, addTab, setActiveTab } = useTabs();
 
-    return (
-        <div className="flex flex-col">
-            {papers.length > 0 ? (
-                <Fragment className="left-0 right-10">
+        const handleTabClick = (paper) => {
+            console.log("get paper " + paper.paper_id)
+            const tabId = 'paper:' + paper.paper_id;
+            if (tabs.find(tab => tab.id === tabId)) {
+                console.log('tab already exists');
+                console.log('try to change to tab ' + tabId);
+                setActiveTab(tabId);
+                return;
+            }
+
+            const newTab = {
+                value: paper.title,
+                icon: DocumentIcon,
+                tabType: TabTypeEnum.Paper,
+                id: tabId,
+                tabBody: <DocTab paper_id={paper.paper_id} />
+            };
+
+            addTab(newTab);
+            setActiveTab(newTab.id);
+        }
+
+        return (
+            <div className="flex flex-col">
+                {papers.length > 0 ? (
+                    <Fragment className="left-0 right-10">
                         <Card className="overflow-scroll h-full w-full">
                             <table className="w-full min-w-max table-auto text-left">
                                 <thead>
@@ -110,59 +129,165 @@ export const PaperPage = ({library_id}) => {
                                 <tbody>
                                     {papers.map(paper => (
                                         <tr key={paper.paper_id} className="even:bg-blue-gray-50/50" onClick={() => handleTabClick(paper)}>
-                                            <td className="p-4">
-                                                <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper.paper_id}
-                                                </Typography>
-                                            </td>
-                                            <td className="p-4">
-                                                <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper.title}
-                                                </Typography>
-                                            </td>
-                                            <td className="p-4">
-                                                <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper.authors}
-                                                </Typography>
-                                            </td>
-                                            <td className="p-4">
-                                                <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper.publisher}
-                                                </Typography>
-                                            </td>
-                                            <td className="p-4">
-                                                <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper.year}
-                                                </Typography>
-                                            </td>
-                                            <td className="p-4">
-                                                <Typography variant="small" color="blue-gray" className="font-normal">
-                                                    {paper.source}
-                                                </Typography>
-                                            </td>
-                                            <td className="p-4">
-                                                <Typography as="a" href="#" variant="small" color="blue" className="font-medium">
-                                                    modify
-                                                </Typography>
-                                                <Typography as="a" href="#" variant="small" color="blue" className="font-medium">
-                                                    delete
-                                                </Typography>
-                                                <Typography as="a" href="#" variant="small" color="blue" className="font-medium">
-                                                    Comments
-                                                </Typography>
-                                            </td>
+                                            {
+                                                editPaper && editPaper.paper_id === paper.paper_id ?
+                                                    <>
+                                                        <td className="p-4">
+                                                            <TextField size='small' variant='outlined' type='standard' defaultValue={editPaper.title} onChange={
+                                                                (e) => {
+                                                                    setEditPaper({
+                                                                        ...editPaper,
+                                                                        title: e.target.value,
+                                                                    })
+                                                                }
+                                                            } />
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <TextField size='small' variant='outlined' type='standard' defaultValue={editPaper.authors} onChange={
+                                                                (e) => {
+                                                                    setEditPaper({
+                                                                        ...editPaper,
+                                                                        authors: e.target.value,
+                                                                    })
+                                                                }
+                                                            } />
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <TextField size='small' variant='outlined' type='standard' defaultValue={editPaper.publisher} onChange={
+                                                                (e) => {
+                                                                    setEditPaper({
+                                                                        ...editPaper,
+                                                                        publisher: e.target.value,
+                                                                    })
+                                                                }
+                                                            } />
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <TextField size='small' variant='outlined' type='standard' defaultValue={editPaper.year} onChange={
+                                                                (e) => {
+                                                                    setEditPaper({
+                                                                        ...editPaper,
+                                                                        year: e.target.value,
+                                                                    })
+                                                                }
+                                                            } />
+                                                        </td></> :
+                                                    <><td className="p-4">
+                                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                                            {paper.title}
+                                                        </Typography>
+                                                    </td>
+                                                        <td className="p-4">
+                                                            <Typography variant="small" color="blue-gray" className="font-normal">
+                                                                {paper.authors}
+                                                            </Typography>
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <Typography variant="small" color="blue-gray" className="font-normal">
+                                                                {paper.publisher}
+                                                            </Typography>
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <Typography variant="small" color="blue-gray" className="font-normal">
+                                                                {paper.year}
+                                                            </Typography>
+                                                        </td>
+                                                    </>
+                                            }
+                                            {
+                                                isYours && (
+                                                    editPaper && editPaper.paper_id === paper.paper_id ?
+                                                        <td className="p-4">
+                                                            <Typography variant="small" className="font-medium" color="blue" as="a"
+                                                                href="javascript:void(0)" onClick={() => {
+                                                                    setEditPaper(null);
+                                                                }}>cancel</Typography>
+                                                            <Typography variant="small" className="font-medium" color="blue" as="a"
+                                                                href="javascript:void(0)" onClick={async () => {
+                                                                    let modifiedItems = {};
+                                                                    if (editPaper.title !== paper.title) {
+                                                                        modifiedItems.title = editPaper.title;
+                                                                    }
+                                                                    if (editPaper.authors !== paper.authors) {
+                                                                        modifiedItems.authors = editPaper.authors;
+                                                                    }
+                                                                    if (editPaper.publisher !== paper.publisher) {
+                                                                        modifiedItems.publisher = editPaper.publisher;
+                                                                    }
+                                                                    if (editPaper.year !== paper.year) {
+                                                                        modifiedItems.year = editPaper.year;
+                                                                    }
+                                                                    try {
+                                                                        const response = await axios.put(MODIFY_PAPER_URL + `/${editPaper.paper_id}`, modifiedItems, {
+                                                                            headers: {
+                                                                                Authorization: `Bearer ${token}`
+                                                                            }
+                                                                        })
+                                                                            .then(response => {
+                                                                                console.log('modify paper');
+                                                                                console.log(response);
+                                                                                setPapers(papers.map(paper => {
+                                                                                    if (paper.paper_id === editPaper.paper_id) {
+                                                                                        return {
+                                                                                            ...paper,
+                                                                                            ...modifiedItems,
+                                                                                        }
+                                                                                    }
+                                                                                    return paper;
+                                                                                }));
+                                                                            })
+                                                                            .catch(error => {
+                                                                                console.log('what the fuck')
+                                                                                setShowAlert(true)
+                                                                                setAlertMsg('查询失败')
+                                                                                console.error(error);
+                                                                            });
+                                                                        console.log('search library');
+                                                                        console.log(topic);
+                                                                        // onSearch();
+                                                                    } catch (error) {
+                                                                    }
+                                                                }
+                                                                }>confirm</Typography>
+                                                        </td>
+                                                        :
+                                                        <>
+                                                            <td className="p-4">
+                                                                <Typography variant="small" className="font-medium" color="blue" as="a"
+                                                                    href="javascript:void(0)" onClick={() => {
+                                                                        setEditPaper(paper);
+                                                                    }}>modify</Typography>
+                                                                <Typography variant="small" className="font-medium" color="blue" as="a"
+                                                                    href="javascript:void(0)" onClick={() => {
+                                                                        //TODO: delete paper
+                                                                        axios.delete(DELETE_PAPER_URL + `/${paper.paper_id}`, {
+                                                                            headers: {
+                                                                                Authorization: `Bearer ${token}`
+                                                                            }
+                                                                        })
+                                                                            .then(response => {
+                                                                                console.log('delete paper');
+                                                                                console.log(response);
+                                                                                setPapers(papers.filter(paper => paper.paper_id !== editPaper.paper_id));
+                                                                            })
+                                                                    }}>delete</Typography>
+                                                            </td>
+                                                        </>
+                                                )
+                                            }
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </Card>
-                </Fragment>)
-                : (
-                    <div className="flex center">
-                        <Typography variant="h6" color="gray">暂无文献</Typography>
-                    </div>
-                )}
-            < AddPaper className="right-0" ref={addPaperRef} library_id={library_id} onRefresh={handleComponentRefresh} />
-        </div >
-    );
+                    </Fragment>)
+                    : (
+                        <div className="flex center">
+                            <Typography variant="h6" color="gray">暂无文献</Typography>
+                        </div>
+                    )}
+                < AddPaper className="right-0" ref={addPaperRef} library_id={library_id} onRefresh={handleComponentRefresh} />
+            </div >
+        );
+    };
 };
