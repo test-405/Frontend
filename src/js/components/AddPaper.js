@@ -18,10 +18,10 @@ function AddPaper({library_id, onRefresh}, ref) {
     const resetState = () => {
         console.log("in reset")
         setPopoverOpen(false);
-        setTitle('');
-        setAuthors('');
-        setPublisher('');
-        setYear('');
+        setTitle(null);
+        setAuthors(null);
+        setPublisher(null);
+        setYear(null);
     };
 
     useImperativeHandle(ref, () => ({

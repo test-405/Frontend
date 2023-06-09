@@ -20,8 +20,8 @@ function AddLibrary({ onRefresh }, ref) {
     const resetState = () => {
         console.log("in reset")
         setPopoverOpen(false);
-        setDesc('');
-        setTopic('');
+        setDesc(null);
+        setTopic(null);
         setPublic(false);
     };
 
