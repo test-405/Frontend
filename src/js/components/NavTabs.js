@@ -1,4 +1,4 @@
-import React, { useState, useId } from "react";
+import React, { useEffect } from "react";
 import {
   Tabs,
   TabsHeader,
@@ -19,9 +19,12 @@ export function NavTabs() {
   console.log('active',activeTab);
   console.log('tabs',tabs);
   
-
-
-  const [selectedTab, setSelectedTab] = useState(tabs[0]?.value);
+  // 用于捕捉activeTab变化，但未起作用
+  // FIXME
+  useEffect(() => {
+    console.log("activeTab changed:", activeTab);
+    handleTabChange(activeTab);
+  }, [activeTab]);
 
   const handleCloseTab = (id) => {
     const index = tabs.findIndex(tab => tab.id === id);
@@ -34,7 +37,6 @@ export function NavTabs() {
 
   const handleTabChange = (id) => {
     console.log('tab changed:', id);
-    setSelectedTab(id);
     setActiveTab(id);
   };
 

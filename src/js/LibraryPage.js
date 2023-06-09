@@ -2,11 +2,13 @@ import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { IconButton, Typography, Card, CardBody, CardFooter, Button } from "@material-tailwind/react";
 import { DELETE_LIBRARY_URL, PUT_LIBRARY_URL, QUERY_LIBRARY_URL } from './config';
-import { TrashIcon, PencilSquareIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { TrashIcon, PencilSquareIcon, CheckCircleIcon, XMarkIcon, BuildingLibraryIcon } from '@heroicons/react/24/outline'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { TextField, Checkbox } from '@mui/material';
 
 import AddLibrary from "./components/AddLibrary";
+import { useTabs, TabTypeEnum } from './TabsContext';
+import { PaperPage } from './PaperPage'
 import Cookies from 'js-cookie';
 
 export const LibraryPage = () => {
@@ -87,13 +89,37 @@ export const LibraryPage = () => {
     }
   }
 
+  const { tabs, addTab, setActiveTab } = useTabs();
+
+  const handleTabClick = (library) => {
+    const tabId = 'library:' + library.library_id;
+    if(tabs.find(tab => tab.id === tabId)) {
+      console.log('tab already exists');
+      console.log('try to change to tab ' + tabId);
+      setActiveTab(tabId);
+      return;
+    }
+
+    const newTab = {
+      value: library.topic,
+      icon: BuildingLibraryIcon,
+      tabType:  TabTypeEnum.PaperList,
+      id: tabId,
+      tabBody: <PaperPage library_id={library.library_id} />
+    };
+
+    addTab(newTab);
+    setActiveTab(newTab.id);
+  }
+
+
   return (
     <div>
       {libraries.length > 0 ? (
         <div className="flex flex-col">
           <Fragment>
             {libraries.map(library => (
-              <Card className="my-3">
+              <Card className="my-3" onClick={() => handleTabClick(library)}>
                 <CardBody>
                   {(
                     editId === library.library_id ? (
