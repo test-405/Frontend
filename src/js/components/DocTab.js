@@ -106,7 +106,14 @@ export function PDFViewer({ paper_id }) {
         formData.append('file', selectedFile);
       
         axios
-          .post(pdf_url, formData)
+          .post(pdf_url, formData, {
+            responseType: 'blob',
+            withCredentials: true, // 发送请求时带上cookie
+            // 可选：如果需要传递其他请求头或参数，请在这里添加
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          })
           .then(response => {
             if (response.status === 200) {
               console.log("添加文献库成功");

@@ -9,7 +9,9 @@ import { QUERY_LIBRARY_URL } from './config';
 import { IconButton } from "@material-tailwind/react";
 import FailAlert from "./components/FailAlert";
 import { Paper, InputBase, Divider } from '@mui/material';
+import Cookies from "js-cookie";
 
+import myImage from "../image/icon.jpg";
 
 export function SearchPage() {
 
@@ -17,6 +19,7 @@ export function SearchPage() {
     const [topic, setTopic] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMsg, setAlertMsg] = useState(null);
+    const token = Cookies.get('authToken')
 
     const handleSearchLibrary = async () => {
         try {
@@ -25,6 +28,10 @@ export function SearchPage() {
                     page_num: 1,
                     page_size: 10,
                     topic: topic,
+                },
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`,
                 }
             })
                 .then(response => {
@@ -57,8 +64,16 @@ export function SearchPage() {
         <div>
             {showAlert ? <div className="absolute top-0 w-11/12"><FailAlert showAlert={showAlert} setShowAlert={setShowAlert} alertMsg={alertMsg} /></div> : null}
             <div className="flex items-center justify-center min-h-screen">
-                <div className=" absolute w-1/2 top-1/3">
+                <div className="absolute w-1/2 top-20">
+                    <div className="flex flex-col items-center">
+                        <img
+                            className="h-1/3 w-1/3 rounded-lg mb-5"
+                            src={myImage}
+                            alt="请我吃麦当劳.jpg"
+                        />
+                    </div>
                     <Paper
+                        className="margin-top-10"
                         component="form"
                         sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', height: 50 }}
                     >
@@ -82,4 +97,5 @@ export function SearchPage() {
             </div>
         </div>
     )
+
 };

@@ -14,7 +14,14 @@ function RootComponent() {
 
   // 重新检查登录状态
   const handleCheckLogin = () => {
-    setIsLoggedIn(Cookies.get('isLoggedIn') === 'true');
+    console.log('Cookies.get(authToken)', Cookies.get('authToken'))
+    if (Cookies.get('authToken') === 'undefined') {
+      setIsLoggedIn(false)
+      Cookies.set('isLoggedIn', 'false');
+    }
+    else {
+      setIsLoggedIn(Cookies.get('isLoggedIn') === 'true');
+    }
   };
 
   useEffect(() => {
@@ -23,7 +30,7 @@ function RootComponent() {
       navigate('/');
     }
   }, [isLoggedIn, navigate]);
-  
+
   const routing = useRoutes([
     { path: 'login', element: <LoginPage onLogin={handleCheckLogin} /> },
     { path: '/', element: isLoggedIn ? <App /> : <LoginPage onLogin={handleCheckLogin} /> },

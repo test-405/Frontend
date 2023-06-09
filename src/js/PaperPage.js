@@ -7,10 +7,13 @@ import { QUERY_LIBRARY_URL, QUERY_PAPER_URL } from './config';
 import { useTabs, TabTypeEnum } from './TabsContext';
 import { DocTab } from './components/DocTab';
 
+import Cookies from 'js-cookie';
+
 const TABLE_HEAD = ["Paper_id", "Title", "Authors", "publisher", "Year", "Source", "Action"];
 
 export const PaperPage = ({library_id}) => {
     console.log('PaperPage library_id', library_id);
+    const token = Cookies.get('authToken');
     const [papers, setPapers] = useState([]);
 
     useEffect(() => {
@@ -19,8 +22,12 @@ export const PaperPage = ({library_id}) => {
                 library_id: library_id,
                 page_num: 1,
                 page_size: 10,
-            }
-        })
+            },
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+        }, )
             .then(response => {
                 response = response.data;
                 console.log(response.data.papers)
