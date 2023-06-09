@@ -1,6 +1,6 @@
 // export some config setting
 // Path: frontend/src/js/config.js
-export const BASE_URL = "http://127.0.0.1:8000"
+export const BASE_URL = "http://127.0.0.1:5000"
 export const API_URL = BASE_URL + "/api"
 
 export const LOGIN_URL = API_URL + "/user/login";
@@ -18,9 +18,11 @@ export const DELETE_COMMENT_URL = API_URL + "/comment"
 
 
 export const QUERY_PAPER_URL = API_URL + "/paper"
-export const QUERY_PDF_URL = API_URL + "/paper"
-export const PUT_PDF_URL = API_URL + "/paper"
 export const MODIFY_PAPER_URL = API_URL + "/paper"
 export const DELETE_PAPER_URL = API_URL + "/paper"
+export const ADD_PAPER_URL = API_URL + "/paper"
+
+export const QUERY_PDF_URL = API_URL + "/paper"
+export const PUT_PDF_URL = API_URL + "/paper"
 
 export const PDF_REQ_URL = API_URL+ "/pdf"

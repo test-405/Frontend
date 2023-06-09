@@ -47,7 +47,7 @@ export function SideBar({ handleTabClick }) {
           {showText && '文献库'}
         </ListItem>
       </List>
-      <List>
+      {/* <List>
         <ListItem className="mb-0" onClick={() => handleTabClick('用户设置')}>
           <ListItemPrefix>
               <Avatar variant="circular" alt="candice" src="https://q.qlogo.cn/g?b=qq&nk=272786724&s=100" />
@@ -58,7 +58,7 @@ export function SideBar({ handleTabClick }) {
         </ListItem>
         <ListItem className="mb-0">
         </ListItem>
-      </List>
+      </List> */}
     </Card>
   );
 }

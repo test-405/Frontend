@@ -14,8 +14,6 @@ const TabsContext = createContext();
 export const TabsProvider = ({ children }) => {
     const [tabs, setTabs] = useState([
         { value: '导航页', icon: HomeIcon, id: useId(), tabType: TabTypeEnum.Home, tabBody: <HomePage /> },
-        // { value: 'test', icon: DocumentIcon, id: useId(), tabType: TabTypeEnum.Paper, tabBody: <DocTab fileName="test"/> },
-        { value: 'STaR', icon: DocumentIcon, id: useId(), tabType:  TabTypeEnum.PaperList, tabBody: <PaperPage />}
     ]);
 
     const addTab = (newTab) => {
